@@ -36,8 +36,6 @@ esp_err_t ina3221_set_config(i2c_master_dev_handle_t *ina3221Handle, uint16_t co
         return error;
     }
 
-    printf("Configuracion grabada: %d\n", config);
-
     return ESP_OK;
 }
 
@@ -149,4 +147,61 @@ esp_err_t ina3221_get_ch3_bus(i2c_master_dev_handle_t *ina3221Handle, int16_t *c
     return ESP_OK;
 }
 
+esp_err_t ina3221_get_ch1_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit) {
+    esp_err_t error;
+
+    uint8_t address = CH1_CAL;
+    uint8_t rxdata[2] = {0};
+
+    error = i2c_master_transmit_receive(*ina3221Handle, &address, sizeof(address), rxdata, sizeof(rxdata), 10);
+
+    if (error != ESP_OK) {
+        ESP_LOGE(tag, "Error al leer CH1 critical limit: %s", esp_err_to_name(error));
+        return error;
+    }
+
+    *limit = ((rxdata[0] << 8) | rxdata[1]) >> 3;
+
+    return ESP_OK;
+}
+
+esp_err_t ina3221_set_ch1_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t limit) {
+    if (limit > 4095) {
+        ESP_LOGE(tag, "Limit <= 4095 (LSB = 8mV)");
+        return ESP_FAIL;
+    }
+
+    esp_err_t error;
+
+    // Trama: SLAVE_ADDR - REG_ADDR - MSB - LSB
+    // En este buffer va: REG_ADDR - MSB - LSB
+    uint8_t txdaxa[3] = {CH1_CAL, (uint8_t)(limit >> 5), (uint8_t)((limit << 3) & 0xFF)};
+
+    error = i2c_master_transmit(*ina3221Handle, txdaxa, sizeof(txdaxa), 10);
+
+    if (error != ESP_OK) {
+        ESP_LOGE(tag, "Error al escribir CH1 critical limit: %s", esp_err_to_name(error));
+        return error;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t ina3221_get_ch1_warning_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit) {
+    esp_err_t error;
+
+    uint8_t address = CH1_WAL;
+    uint8_t rxdata[2] = {0};
+
+    error = i2c_master_transmit_receive(*ina3221Handle, &address, sizeof(address), rxdata, sizeof(rxdata), 10);
+
+    if (error != ESP_OK) {
+        ESP_LOGE(tag, "Error al leer CH1 warning limit: %s", esp_err_to_name(error));
+        return error;
+    }
+
+    *limit = ((rxdata[0] << 8) | rxdata[1]) >> 3;
+
+    return ESP_OK;
+}
 

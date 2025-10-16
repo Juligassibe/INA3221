@@ -50,7 +50,7 @@ typedef enum INA3221_CONFIG_t {
     BUS_CT_2MS = 0x0140,
     BUS_CT_4MS = 0x0180,
     BUS_CT_8MS = 0x01C0,
-    SHUNT_CT_140MS = 0x0000,
+    SHUNT_CT_140US = 0x0000,
     SHUNT_CT_204US = 0x0008,
     SHUNT_CT_332US = 0x0010,
     SHUNT_CT_588US = 0x0018,
@@ -73,9 +73,17 @@ esp_err_t ina3221_get_ch2_shunt(i2c_master_dev_handle_t *ina3221Handle, int16_t 
 esp_err_t ina3221_get_ch2_bus(i2c_master_dev_handle_t *ina3221Handle, int16_t *ch2Bus);
 esp_err_t ina3221_get_ch3_shunt(i2c_master_dev_handle_t *ina3221Handle, int16_t *ch3Shunt);
 esp_err_t ina3221_get_ch3_bus(i2c_master_dev_handle_t *ina3221Handle, int16_t *ch3Bus);
-
-
-
-
+esp_err_t ina3221_get_ch1_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit);
+esp_err_t ina3221_set_ch1_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t limit);
+esp_err_t ina3221_get_ch1_warning_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit);
+esp_err_t ina3221_set_ch1_warning_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t limit);
+esp_err_t ina3221_get_ch2_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit);
+esp_err_t ina3221_set_ch2_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t limit);
+esp_err_t ina3221_get_ch2_warning_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit);
+esp_err_t ina3221_set_ch2_warning_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t limit);
+esp_err_t ina3221_get_ch3_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit);
+esp_err_t ina3221_set_ch3_critical_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t limit);
+esp_err_t ina3221_get_ch3_warning_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t *limit);
+esp_err_t ina3221_set_ch3_warning_limit(i2c_master_dev_handle_t *ina3221Handle, uint16_t limit);
 
 #endif
